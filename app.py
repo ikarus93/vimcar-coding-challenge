@@ -54,11 +54,11 @@ def signup():
         msg = Message("Welcome", sender = mail_username, recipients = [email])
         msg.body = "Please verify your email by clicking on the following Link\n{link}".format(link = mail_link)
         #mail.send(msg)
-
-        return jsonify(message="You've signed up successfully. Please validate your email address by clicking on the link we've sent you.", data=[]), 200
+        
+        #added mail link to response data for integration test purposes
+        return jsonify(message="You've signed up successfully. Please validate your email address by clicking on the link we've sent you.", data=[dict(link = mail_link)]), 200
         
     except Exception as e:
-        print(e)
         return send_error_message(str(e))
 
 
