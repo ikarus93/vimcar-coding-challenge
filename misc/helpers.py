@@ -1,6 +1,10 @@
 from flask import jsonify
 from .exceptionsMap import exceptions
 import re
+import time
+import json
+
+
 
 def verify_email(email):
     '''
@@ -22,3 +26,13 @@ def send_error_message(status):
         #Edge case regarding arbitrary internal flask error --> set it to status code for internal server error
         status = "500"
     return jsonify(message=exceptions[status], data=[]), int(status)
+
+
+def generate_pseudo_random_email():
+    '''
+    Generates pseudo random email address for integration tests, based on current Unix Timestamp (to assure randomness in testing approach)
+    
+    Returns: email(type="string") == generated email address
+    '''
+    timestamp = time.time()
+    return "{timestamp}@test.com".format(timestamp = timestamp)

@@ -2,3 +2,4 @@ misc/config.py
 __pycache__/
 *.py[cod]
 *$py.class
+users.db

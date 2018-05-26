@@ -51,9 +51,9 @@ def signup():
         user_id = query_db("SELECT ID FROM users WHERE email=?", (email, ), g)[0]["ID"]
         mail_link = "https://vimcar-coding-challenge-atheos.c9users.io/verify?id={id}".format(id = user_id)
         
-        msg = Message('Welcome', sender = mail_username, recipients = [email])
+        msg = Message("Welcome", sender = mail_username, recipients = [email])
         msg.body = "Please verify your email by clicking on the following Link\n{link}".format(link = mail_link)
-        mail.send(msg)
+        #mail.send(msg)
 
         return jsonify(message="You've signed up successfully. Please validate your email address by clicking on the link we've sent you.", data=[]), 200
         
@@ -62,12 +62,14 @@ def signup():
         return send_error_message(str(e))
 
 
-@app.route("/verify")
+@app.route('/verify')
 def verify():
     ''' Route that extracts user id from query string and lets user verify his email address '''
     try:
         user_id = request.args.get("id")
         db = get_db("users.db", g)
+        if db is None:
+            raise Exception("500") # Exception 500 - Internal Server/Database Error
         
         status = query_db("SELECT VERIFIED FROM users WHERE id = ?", (user_id, ), g)
         if not len(status):
@@ -83,7 +85,7 @@ def verify():
         print(e)
         return send_error_message(str(e))
     
-@app.route("/auth/login", methods=["POST"])
+@app.route('/auth/login', methods=["POST"])
 def login():
     ''' Route that logs in user,
         Expects two values in Request Body - email and password
@@ -99,6 +101,9 @@ def login():
             raise Exception("422")  # Exception 422 - Unprocessable Entity
             
         db = get_db("users.db", g)
+        if db is None:
+            raise Exception("500") # Exception 500 - Internal Server/Database Error
+        
         result = query_db("SELECT * FROM users WHERE email=?", (email, ), g)
         if not len(result):
             raise Exception("404") # Exception 404 - Resource not found (Email is not signed up for service)
