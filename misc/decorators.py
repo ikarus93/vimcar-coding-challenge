@@ -6,6 +6,7 @@ def login_required(f):
     """
     Decorator to protect routes from unauthorized use,
     as described at http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
+    Returns: decorator function for protecting route
     """
     @wraps(f)
     def decorated_func(*args, **kwargs):
