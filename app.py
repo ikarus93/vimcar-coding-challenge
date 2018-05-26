@@ -14,12 +14,12 @@ app = Flask(__name__)
 app.secret_key = app_secret
 
 '''Config for flask-mail'''
-app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = mail_username
-app.config['MAIL_PASSWORD'] = mail_password
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
+app.config["MAIL_SERVER"]='smtp.gmail.com'
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USERNAME"] = mail_username
+app.config["MAIL_PASSWORD"] = mail_password
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USE_SSL"] = True
 
 mail = Mail(app)  #Creating instance of Mail
 
@@ -53,7 +53,7 @@ def signup():
         
         msg = Message("Welcome", sender = mail_username, recipients = [email])
         msg.body = "Please verify your email by clicking on the following Link\n{link}".format(link = mail_link)
-        #mail.send(msg)
+        mail.send(msg)
         
         #added mail link to response data for integration test purposes
         return jsonify(message="You've signed up successfully. Please validate your email address by clicking on the link we've sent you.", data=[dict(link = mail_link)]), 200
@@ -117,13 +117,13 @@ def login():
     except Exception as e:
         return send_error_message(str(e))
 
-@app.route("/mock/protected")
+@app.route('/mock/protected')
 @login_required
 def protected_mock_route():
     '''Protected "mock" route to test session API'''
     return jsonify(message="Success!!!! You are now viewing a protected route...this must mean you are logged in ;)", data=[{"The answer to life, the universe and everything": 42}]), 200
 
-@app.route("/auth/logout")
+@app.route('/auth/logout')
 def logout():
     '''Deletes session to log user out'''
     session.clear()
